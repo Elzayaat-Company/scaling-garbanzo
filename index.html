@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شركة الزيات للإنتاج الداجني - الأدوية البيطرية والأعلاف</title>
+    <title>لوحة التحكم - شركة الزيات للإنتاج الداجني</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -15,377 +15,433 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background: #f5f7fa;
             direction: rtl;
         }
 
-        /* Header */
-        .header {
+        /* Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo i {
-            font-size: 2.5rem;
-            color: #ffd700;
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .search-container {
-            position: relative;
-            flex: 1;
-            max-width: 400px;
-            margin: 0 2rem;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 20px 12px 50px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.9);
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(255,215,0,0.3);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #667eea;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-btn:hover {
-            background: rgba(255,215,0,0.9);
-            color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            right: -300px;
-            top: 80px;
-            width: 300px;
-            height: calc(100vh - 80px);
-            background: white;
-            box-shadow: -2px 0 20px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-            z-index: 999;
             overflow-y: auto;
+            transition: transform 0.3s ease;
         }
 
-        .sidebar.active {
-            right: 0;
+        .admin-sidebar.collapsed {
+            transform: translateX(240px);
         }
 
         .sidebar-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             text-align: center;
         }
 
-        .category-section {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .category-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+        .sidebar-header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
         }
 
-        .subcategory {
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
             display: block;
-            padding: 10px 15px;
-            margin: 5px 0;
-            background: #f8f9fa;
-            color: #555;
+            padding: 1rem 1.5rem;
+            color: white;
             text-decoration: none;
-            border-radius: 8px;
             transition: all 0.3s ease;
             border-right: 4px solid transparent;
         }
 
-        .subcategory:hover {
-            background: #667eea;
-            color: white;
-            transform: translateX(-5px);
+        .menu-item:hover,
+        .menu-item.active {
+            background: rgba(255,255,255,0.1);
             border-right-color: #ffd700;
+            transform: translateX(-5px);
+        }
+
+        .menu-item i {
+            margin-left: 10px;
+            width: 20px;
         }
 
         /* Main Content */
-        .main-content {
-            margin-top: 100px;
-            padding: 2rem;
+        .admin-main {
+            margin-right: 280px;
+            min-height: 100vh;
+            transition: margin-right 0.3s ease;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, rgba(102,126,234,0.9), rgba(118,75,162,0.9)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><polygon fill="%23ffffff" fill-opacity="0.1" points="0,100 50,125 100,100 150,125 200,100 250,125 300,100 350,125 400,100 450,125 500,100 550,125 600,100 650,125 700,100 750,125 800,100 850,125 900,100 950,125 1000,100 1000,300 0,300"/></svg>');
-            color: white;
-            padding: 4rem 2rem;
-            border-radius: 20px;
-            margin-bottom: 3rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        .admin-main.expanded {
+            margin-right: 40px;
         }
 
-        .hero-content h2 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        /* Products Grid */
-        .products-section {
-            margin-top: 3rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 2px;
-        }
-
-        .filters {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .filter-btn {
+        /* Header */
+        .admin-header {
             background: white;
-            border: 2px solid #667eea;
-            color: #667eea;
-            padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            color: #333;
             font-weight: 600;
         }
 
-        .filter-btn.active,
-        .filter-btn:hover {
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .admin-btn {
             background: #667eea;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(30px);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .product-card.fade-in {
-            animation: fadeInUp 0.6s ease forwards;
+        .admin-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .admin-btn.secondary {
+            background: #6c757d;
+        }
+
+        .admin-btn.success {
+            background: #28a745;
+        }
+
+        .admin-btn.danger {
+            background: #dc3545;
+        }
+
+        /* Content */
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
         }
 
         @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
             border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            font-size: 1.5rem;
+            color: white;
         }
 
-        .product-image i {
-            font-size: 4rem;
-            color: #667eea;
-            opacity: 0.7;
-        }
+        .stat-icon.blue { background: #667eea; }
+        .stat-icon.green { background: #28a745; }
+        .stat-icon.orange { background: #fd7e14; }
+        .stat-icon.red { background: #dc3545; }
 
-        .product-title {
-            font-size: 1.3rem;
-            font-weight: 600;
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 0.5rem;
         }
 
-        .product-category {
-            color: #667eea;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .product-description {
+        .stat-label {
             color: #666;
-            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .product-actions {
-            display: flex;
-            gap: 10px;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
         }
 
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #667eea;
             border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            padding: 2rem;
             text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            background: #f0f2ff;
+            border-color: #5a67d8;
+        }
+
+        .file-upload.dragover {
+            background: #e6e9ff;
+            border-color: #4c51bf;
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .uploaded-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .uploaded-file {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .uploaded-file img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-remove {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(220,53,69,0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
         }
 
-        .btn-primary {
+        /* Table */
+        .data-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
             background: #667eea;
             color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn-secondary {
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .table-search {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            placeholder-color: rgba(255,255,255,0.7);
+        }
+
+        .table-search::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
             background: #f8f9fa;
-            color: #667eea;
-            border: 2px solid #667eea;
+            font-weight: 600;
+            color: #495057;
         }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
+        tbody tr:hover {
+            background: #f8f9ff;
         }
 
-        .btn-primary:hover {
-            background: #5a67d8;
-            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+        .action-buttons {
+            display: flex;
+            gap: 8px;
         }
 
-        .btn-secondary:hover {
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
             background: #667eea;
             color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Menu Toggle */
-        .menu-toggle {
-            display: none;
+        .modal-close {
             background: none;
             border: none;
             color: white;
@@ -393,82 +449,76 @@
             cursor: pointer;
         }
 
-        /* Footer */
-        .footer {
-            background: #333;
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Toggle Sidebar */
+        .sidebar-toggle {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            z-index: 1001;
+            background: #667eea;
             color: white;
-            text-align: center;
-            padding: 3rem 2rem 1rem;
-            margin-top: 4rem;
+            border: none;
+            padding: 15px 8px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            color: #ffd700;
-        }
-
-        .footer-section p, .footer-section a {
-            color: #ccc;
-            line-height: 1.6;
-            text-decoration: none;
-        }
-
-        .footer-section a:hover {
-            color: #ffd700;
+        .sidebar-toggle:hover {
+            background: #5a67d8;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
+            .admin-sidebar {
+                transform: translateX(280px);
             }
 
-            .search-container {
-                display: none;
+            .admin-sidebar.active {
+                transform: translateX(0);
             }
 
-            .menu-toggle {
-                display: block;
+            .admin-main {
+                margin-right: 0;
             }
 
-            .nav-buttons {
-                display: none;
-            }
-
-            .hero-content h2 {
-                font-size: 2rem;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-                padding: 0 1rem;
-            }
-
-            .main-content {
+            .admin-header {
                 padding: 1rem;
+            }
+
+            .admin-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Loading Animation */
-        .loading {
+        /* Loading */
+        .loading-overlay {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
             z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
         }
 
         .spinner {
@@ -485,474 +535,770 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Lightbox */
-        .lightbox {
+        /* Success/Error Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
             display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            animation: fadeIn 0.3s ease;
         }
 
-        .lightbox-content {
-            position: relative;
-            margin: 5% auto;
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
         }
 
-        .lightbox img {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 10px;
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        .lightbox-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            background: rgba(0,0,0,0.5);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-seedling"></i>
-                <h1>شركة الزيات للإنتاج الداجني</h1>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="ابحث عن الأدوية والمنتجات..." id="searchInput">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-
-            <div class="nav-buttons">
-                <a href="#" class="nav-btn" onclick="toggleSidebar()">
-                    <i class="fas fa-list"></i> التصنيفات
-                </a>
-                <a href="admin.html" class="nav-btn">
-                    <i class="fas fa-cog"></i> لوحة التحكم
-                </a>
-            </div>
-
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
-
     <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
+    <nav class="admin-sidebar" id="adminSidebar">
         <div class="sidebar-header">
-            <h3><i class="fas fa-pills"></i> تصنيف المنتجات</h3>
+            <h2><i class="fas fa-seedling"></i> لوحة التحكم</h2>
+            <p>شركة الزيات للإنتاج الداجني</p>
         </div>
-
-        <div class="category-section">
-            <h4 class="category-title">🟢 المنشطات</h4>
-            <a href="#" class="subcategory" onclick="filterProducts('منشطات الكبد')">منشطات الكبد</a>
-            <a href="#" class="subcategory" onclick="filterProducts('منشطات النمو')">منشطات النمو</a>
-            <a href="#" class="subcategory" onclick="filterProducts('سحب علف')">سحب علف</a>
-            <a href="#" class="subcategory" onclick="filterProducts('رافعات مناعة')">رافعات مناعة</a>
-            <a href="#" class="subcategory" onclick="filterProducts('فيتامينات عامة')">فيتامينات عامة</a>
-            <a href="#" class="subcategory" onclick="filterProducts('خمائر')">خمائر</a>
-            <a href="#" class="subcategory" onclick="filterProducts('تحصينات')">تحصينات</a>
-        </div>
-
-        <div class="category-section">
-            <h4 class="category-title">🟠 الأدوية العلاجية</h4>
-            <a href="#" class="subcategory" onclick="filterProducts('مضاد الكوكسيديا')">مضاد الكوكسيديا</a>
-            <a href="#" class="subcategory" onclick="filterProducts('مضاد الكولستريديا')">مضاد الكولستريديا</a>
-            <a href="#" class="subcategory" onclick="filterProducts('مضادات السموم')">مضادات السموم</a>
-            <a href="#" class="subcategory" onclick="filterProducts('الغسيل الكلوي')">الغسيل الكلوي</a>
-            <a href="#" class="subcategory" onclick="filterProducts('موسعات الشعب')">موسعات الشعب</a>
-        </div>
-
-        <div class="category-section">
-            <h4 class="category-title">🔵 المضادات الحيوية</h4>
-            <a href="#" class="subcategory" onclick="filterProducts('لينكومايسين')">لينكومايسين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('دوكسيكلين')">دوكسيكلين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('إنروفلوكساسين')">إنروفلوكساسين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('فوسفومايسين')">فوسفومايسين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('أمبيسلين')">أمبيسلين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('تايلوزين')">تايلوزين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('تيلميكوزين')">تيلميكوزين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('إرثرومايسين')">إرثرومايسين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('نيومايسين')">نيومايسين</a>
-            <a href="#" class="subcategory" onclick="filterProducts('أموكسيسلين')">أموكسيسلين</a>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('products')">
+                <i class="fas fa-pills"></i> إدارة المنتجات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('categories')">
+                <i class="fas fa-tags"></i> إدارة التصنيفات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('orders')">
+                <i class="fas fa-shopping-cart"></i> الطلبات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('users')">
+                <i class="fas fa-users"></i> المستخدمين
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('reports')">
+                <i class="fas fa-chart-bar"></i> التقارير
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('settings')">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-external-link-alt"></i> عرض الموقع
+            </a>
         </div>
     </nav>
 
+    <!-- Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <!-- Main Content -->
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h2>أفضل الأدوية البيطرية والأعلاف</h2>
-                <p>نوفر لك أجود المنتجات البيطرية المستوردة والأعلاف عالية الجودة لضمان صحة ونمو دواجنك</p>
-                <div class="nav-buttons">
-                    <a href="#products" class="nav-btn">تصفح المنتجات</a>
-                    <a href="#contact" class="nav-btn">تواصل معنا</a>
+    <main class="admin-main" id="adminMain">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1 class="admin-title" id="pageTitle">لوحة التحكم الرئيسية</h1>
+            <div class="admin-actions">
+                <button class="admin-btn success" onclick="showModal('addProductModal')">
+                    <i class="fas fa-plus"></i> إضافة منتج
+                </button>
+                <button class="admin-btn secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i> تصدير البيانات
+                </button>
+                <button class="admin-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i> الإشعارات (3)
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <!-- Alerts -->
+            <div id="alertContainer"></div>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">127</div>
+                                <div class="stat-label">إجمالي المنتجات</div>
+                            </div>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">89</div>
+                                <div class="stat-label">طلبات اليوم</div>
+                            </div>
+                            <div class="stat-icon green">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">1,245</div>
+                                <div class="stat-label">إجمالي الزوار</div>
+                            </div>
+                            <div class="stat-icon orange">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">24,500</div>
+                                <div class="stat-label">المبيعات (ريال)</div>
+                            </div>
+                            <div class="stat-icon red">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Products Section -->
-        <section class="products-section" id="products">
-            <h2 class="section-title">منتجاتنا المميزة</h2>
-            
-            <div class="filters">
-                <button class="filter-btn active" onclick="filterProducts('all')">جميع المنتجات</button>
-                <button class="filter-btn" onclick="filterProducts('المنشطات')">المنشطات</button>
-                <button class="filter-btn" onclick="filterProducts('الأدوية العلاجية')">الأدوية العلاجية</button>
-                <button class="filter-btn" onclick="filterProducts('المضادات الحيوية')">المضادات الحيوية</button>
-            </div>
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">آخر الطلبات</h3>
+                        <input type="text" class="table-search" placeholder="بحث في الطلبات...">
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>العميل</th>
+                                <th>المنتج</th>
+                                <th>القيمة</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>أحمد محمد</td>
+                                <td>فيتا أمينو بلس</td>
+                                <td>120 ريال</td>
+                                <td><span style="color: #28a745;">مكتمل</span></td>
+                                <td>2024-01-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="admin-btn btn-small">عرض</button>
+                                        <button class="admin-btn btn-small success">تحديث</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#12344</td>
+                                <td>فاطمة علي</td>
+                                <td>كوكسي كيور</td>
+                                <td>85 ريال</td>
+                                <td><span style="color: #fd7e14;">معلق</span></td>
+                                <td>2024-01-14</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="admin-btn btn-small">عرض</button>
+                                        <button class="admin-btn btn-small success">تحديث</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            <div class="products-grid" id="productsGrid">
-                <!-- Products will be loaded here dynamically -->
-            </div>
-        </section>
+            <!-- Products Section -->
+            <section class="content-section" id="productsSection">
+                <div class="form-container">
+                    <h3>إضافة منتج جديد</h3>
+                    <form id="productForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">اسم المنتج</label>
+                                <input type="text" class="form-input" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">التصنيف الرئيسي</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">اختر التصنيف</option>
+                                    <option value="المنشطات">المنشطات</option>
+                                    <option value="الأدوية العلاجية">الأدوية العلاجية</option>
+                                    <option value="المضادات الحيوية">المضادات الحيوية</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">التصنيف الفرعي</label>
+                                <select class="form-select" id="productSubcategory" required>
+                                    <option value="">اختر التصنيف الفرعي</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">السعر</label>
+                                <input type="number" class="form-input" id="productPrice" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">وصف المنتج</label>
+                            <textarea class="form-textarea" id="productDescription" placeholder="اكتب وصفاً تفصيلياً للمنتج..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">صور المنتج</label>
+                            <div class="file-upload" onclick="document.getElementById('productImages').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>اسحب الصور هنا أو اضغط للاختيار</p>
+                                <small>PNG, JPG حتى 5MB لكل صورة</small>
+                                <input type="file" id="productImages" multiple accept="image/*">
+                            </div>
+                            <div class="uploaded-files" id="uploadedFiles"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="admin-btn success">
+                                <i class="fas fa-save"></i> حفظ المنتج
+                            </button>
+                            <button type="button" class="admin-btn secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i> إعادة تعيين
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">قائمة المنتجات</h3>
+                        <input type="text" class="table-search" placeholder="بحث في المنتجات..." onkeyup="searchProducts(this.value)">
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم المنتج</th>
+                                <th>التصنيف</th>
+                                <th>التصنيف الفرعي</th>
+                                <th>السعر</th>
+                                <th>المشاهدات</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="content-section" id="categoriesSection">
+                <div class="form-container">
+                    <h3>إدارة التصنيفات</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-input" id="categoryName" placeholder="مثال: المنشطات">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">التصنيف الرئيسي</label>
+                            <select class="form-select" id="parentCategory">
+                                <option value="">تصنيف رئيسي</option>
+                                <option value="المنشطات">المنشطات</option>
+                                <option value="الأدوية العلاجية">الأدوية العلاجية</option>
+                                <option value="المضادات الحيوية">المضادات الحيوية</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="admin-btn success" onclick="addCategory()">
+                        <i class="fas fa-plus"></i> إضافة التصنيف
+                    </button>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="content-section" id="ordersSection">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">إدارة الطلبات</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="form-select" style="width: auto;">
+                                <option>جميع الحالات</option>
+                                <option>معلق</option>
+                                <option>مؤكد</option>
+                                <option>مكتمل</option>
+                                <option>ملغي</option>
+                            </select>
+                            <input type="text" class="table-search" placeholder="بحث في الطلبات...">
+                        </div>
+                    </div>
+                    <!-- Orders table content -->
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section class="content-section" id="usersSection">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">إدارة المستخدمين</h3>
+                        <button class="admin-btn success" onclick="showModal('addUserModal')">
+                            <i class="fas fa-user-plus"></i> إضافة مستخدم
+                        </button>
+                    </div>
+                    <!-- Users table content -->
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section class="content-section" id="reportsSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>تقرير المبيعات الشهرية</h3>
+                        <canvas id="salesChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="stat-card">
+                        <h3>أكثر المنتجات مبيعاً</h3>
+                        <canvas id="productsChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settingsSection">
+                <div class="form-container">
+                    <h3>إعدادات الموقع</h3>
+                    <div class="form-group">
+                        <label class="form-label">اسم الشركة</label>
+                        <input type="text" class="form-input" value="شركة الزيات للإنتاج الداجني">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">وصف الشركة</label>
+                        <textarea class="form-textarea">نحن رواد في مجال توفير الأدوية البيطرية والأعلاف عالية الجودة</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-input" value="123-456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-input" value="info@alzayat.com">
+                        </div>
+                    </div>
+                    <button class="admin-btn success">
+                        <i class="fas fa-save"></i> حفظ الإعدادات
+                    </button>
+                </div>
+            </section>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>شركة الزيات للإنتاج الداجني</h3>
-                    <p>نحن رواد في مجال توفير الأدوية البيطرية والأعلاف عالية الجودة لتربية الدواجن البيضاء</p>
-                </div>
-                <div class="footer-section">
-                    <h3>خدماتنا</h3>
-                    <p>• الأدوية البيطرية المستوردة</p>
-                    <p>• الأعلاف المتخصصة</p>
-                    <p>• تربية الدواجن البيضاء</p>
-                    <p>• الاستشارات البيطرية</p>
-                </div>
-                <div class="footer-section">
-                    <h3>تواصل معنا</h3>
-                    <p><i class="fas fa-phone"></i> 123-456-7890</p>
-                    <p><i class="fas fa-envelope"></i> info@alzayat.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> المملكة العربية السعودية</p>
-                </div>
-            </div>
-            <p>&copy; 2024 شركة الزيات للإنتاج الداجني. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-
-    <!-- Loading -->
-    <div class="loading" id="loading">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
     </div>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <div class="lightbox-content">
-            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-            <img id="lightboxImage" src="" alt="">
+    <!-- Add Product Modal -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة منتج جديد</h3>
+                <button class="modal-close" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Product form will be here -->
+                <p>نموذج إضافة المنتج...</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // Sample products data
-        const products = [
+        // Sample data
+        const sampleProducts = [
             {
                 id: 1,
                 name: "فيتا أمينو بلس",
                 category: "المنشطات",
                 subcategory: "فيتامينات عامة",
-                description: "مجموعة متكاملة من الفيتامينات والأحماض الأمينية الضرورية لنمو الدواجن",
-                image: "fas fa-pills",
-                price: "120 ريال",
-                rating: 4.8
+                price: "120",
+                views: 245,
+                image: "fas fa-pills"
             },
             {
                 id: 2,
                 name: "كوكسي كيور",
                 category: "الأدوية العلاجية",
                 subcategory: "مضاد الكوكسيديا",
-                description: "دواء فعال لعلاج والوقاية من الكوكسيديا في الدواجن",
-                image: "fas fa-capsules",
-                price: "85 ريال",
-                rating: 4.9
+                price: "85",
+                views: 189,
+                image: "fas fa-capsules"
             },
             {
                 id: 3,
                 name: "إنروفلوكس 10%",
                 category: "المضادات الحيوية",
                 subcategory: "إنروفلوكساسين",
-                description: "مضاد حيوي واسع الطيف لعلاج الالتهابات البكتيرية",
-                image: "fas fa-syringe",
-                price: "95 ريال",
-                rating: 4.7
-            },
-            {
-                id: 4,
-                name: "ليفر تونيك",
-                category: "المنشطات",
-                subcategory: "منشطات الكبد",
-                description: "منشط طبيعي للكبد يحسن من وظائف الهضم والتمثيل الغذائي",
-                image: "fas fa-leaf",
-                price: "75 ريال",
-                rating: 4.6
-            },
-            {
-                id: 5,
-                name: "إمولسيفاير بلس",
-                category: "الأدوية العلاجية",
-                subcategory: "مضادات السموم",
-                description: "مادة طبيعية لربط السموم الفطرية وحماية الكبد",
-                image: "fas fa-shield-alt",
-                price: "110 ريال",
-                rating: 4.5
-            },
-            {
-                id: 6,
-                name: "دوكسي 20%",
-                category: "المضادات الحيوية",
-                subcategory: "دوكسيكلين",
-                description: "مضاد حيوي قوي لعلاج العدوى التنفسية والمعوية",
-                image: "fas fa-tablets",
-                price: "88 ريال",
-                rating: 4.8
+                price: "95",
+                views: 156,
+                image: "fas fa-syringe"
             }
         ];
 
-        // Initialize page
+        // Subcategories mapping
+        const subcategories = {
+            "المنشطات": ["منشطات الكبد", "منشطات النمو", "سحب علف", "رافعات مناعة", "فيتامينات عامة", "خمائر", "تحصينات"],
+            "الأدوية العلاجية": ["مضاد الكوكسيديا", "مضاد الكولستريديا", "مضادات السموم", "الغسيل الكلوي", "موسعات الشعب"],
+            "المضادات الحيوية": ["لينكومايسين", "دوكسيكلين", "إنروفلوكساسين", "فوسفومايسين", "أمبيسلين", "تايلوزين", "تيلميكوزين", "إرثرومايسين", "نيومايسين", "أموكسيسلين"]
+        };
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            displayProducts(products);
-            setupSearch();
-            animateCards();
+            loadProducts();
+            setupEventListeners();
         });
 
-        // Display products
-        function displayProducts(productsToShow) {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-
-            productsToShow.forEach((product, index) => {
-                const productCard = createProductCard(product, index);
-                grid.appendChild(productCard);
+        // Show/Hide sections
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
             });
 
-            // Animate cards
-            setTimeout(() => {
-                const cards = document.querySelectorAll('.product-card');
-                cards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('fade-in');
-                    }, index * 100);
-                });
-            }, 100);
-        }
-
-        // Create product card
-        function createProductCard(product, index) {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.setAttribute('data-category', product.category);
-            card.setAttribute('data-subcategory', product.subcategory);
-
-            card.innerHTML = `
-                <div class="product-image">
-                    <i class="${product.image}"></i>
-                </div>
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-category">${product.subcategory}</p>
-                <p class="product-description">${product.description}</p>
-                <div class="product-rating">
-                    ${generateStars(product.rating)}
-                    <span>(${product.rating})</span>
-                </div>
-                <div class="product-actions">
-                    <button class="action-btn btn-primary" onclick="viewProduct(${product.id})">
-                        <i class="fas fa-eye"></i> عرض التفاصيل
-                    </button>
-                    <button class="action-btn btn-secondary" onclick="downloadPDF(${product.id})">
-                        <i class="fas fa-download"></i> النشرة
-                    </button>
-                </div>
-            `;
-
-            return card;
-        }
-
-        // Generate star rating
-        function generateStars(rating) {
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 !== 0;
-
-            for (let i = 0; i < fullStars; i++) {
-                stars += '<i class="fas fa-star" style="color: #ffd700;"></i>';
-            }
-
-            if (hasHalfStar) {
-                stars += '<i class="fas fa-star-half-alt" style="color: #ffd700;"></i>';
-            }
-
-            const emptyStars = 5 - Math.ceil(rating);
-            for (let i = 0; i < emptyStars; i++) {
-                stars += '<i class="far fa-star" style="color: #ddd;"></i>';
-            }
-
-            return stars;
-        }
-
-        // Filter products
-        function filterProducts(category) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            if (category === 'all') {
-                displayProducts(products);
-                buttons[0].classList.add('active');
-            } else {
-                const filtered = products.filter(product => 
-                    product.category === category || product.subcategory === category
-                );
-                displayProducts(filtered);
-                
-                // Find and activate the correct button
-                buttons.forEach(btn => {
-                    if (btn.textContent.includes(category) || btn.onclick.toString().includes(category)) {
-                        btn.classList.add('active');
-                    }
-                });
-            }
-
-            // Close sidebar on mobile
-            if (window.innerWidth <= 768) {
-                toggleSidebar();
-            }
-        }
-
-        // Setup search
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const filtered = products.filter(product =>
-                    product.name.toLowerCase().includes(searchTerm) ||
-                    product.description.toLowerCase().includes(searchTerm) ||
-                    product.category.toLowerCase().includes(searchTerm) ||
-                    product.subcategory.toLowerCase().includes(searchTerm)
-                );
-                displayProducts(filtered);
+            // Remove active class from menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
             });
+
+            // Show selected section
+            document.getElementById(sectionName + 'Section').classList.add('active');
+
+            // Add active class to clicked menu item
+            event.target.classList.add('active');
+
+            // Update page title
+            const titles = {
+                'dashboard': 'لوحة التحكم الرئيسية',
+                'products': 'إدارة المنتجات',
+                'categories': 'إدارة التصنيفات',
+                'orders': 'إدارة الطلبات',
+                'users': 'إدارة المستخدمين',
+                'reports': 'التقارير والإحصائيات',
+                'settings': 'إعدادات النظام'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionName];
         }
 
         // Toggle sidebar
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
-        }
-
-        // View product details
-        function viewProduct(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                alert(`عرض تفاصيل: ${product.name}\n\nالوصف: ${product.description}\n\nالفئة: ${product.category}\n\nالتصنيف الفرعي: ${product.subcategory}\n\nالسعر: ${product.price}`);
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('expanded');
             }
         }
 
-        // Download PDF
-        function downloadPDF(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                alert(`تحميل النشرة الطبية لـ: ${product.name}`);
-                // Here you would implement actual PDF download
-            }
+        // Setup event listeners
+        function setupEventListeners() {
+            // Category change handler
+            document.getElementById('productCategory').addEventListener('change', function() {
+                updateSubcategories(this.value);
+            });
+
+            // File upload handler
+            document.getElementById('productImages').addEventListener('change', handleFileUpload);
+
+            // Form submit handler
+            document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
+
+            // Drag and drop
+            setupDragAndDrop();
         }
 
-        // Animate cards on scroll
-        function animateCards() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                    }
+        // Update subcategories
+        function updateSubcategories(category) {
+            const subcategorySelect = document.getElementById('productSubcategory');
+            subcategorySelect.innerHTML = '<option value="">اختر التصنيف الفرعي</option>';
+
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
                 });
-            });
-
-            document.querySelectorAll('.product-card').forEach(card => {
-                observer.observe(card);
-            });
+            }
         }
 
-        // Close sidebar when clicking outside
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navBtn = document.querySelector('.nav-btn');
-
-            if (!sidebar.contains(event.target) && 
-                !menuToggle.contains(event.target) && 
-                !navBtn?.contains(event.target)) {
-                sidebar.classList.remove('active');
-            }
-        });
-
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        // Handle file upload
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            const container = document.getElementById('uploadedFiles');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const fileDiv = document.createElement('div');
+                        fileDiv.className = 'uploaded-file';
+                        fileDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button class="file-remove" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        container.appendChild(fileDiv);
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
-        });
+        }
 
-        // Loading animation
+        // Setup drag and drop
+        function setupDragAndDrop() {
+            const uploadArea = document.querySelector('.file-upload');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
+
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                document.getElementById('productImages').files = files;
+                handleFileUpload({target: {files: files}});
+            }
+        }
+
+        // Handle product form submit
+        function handleProductSubmit(event) {
+            event.preventDefault();
+            
+            showLoading();
+            
+            // Simulate API call
+            setTimeout(() => {
+                hideLoading();
+                showAlert('تم إضافة المنتج بنجاح!', 'success');
+                resetForm();
+                loadProducts();
+            }, 2000);
+        }
+
+        // Load products
+        function loadProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+
+            sampleProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><i class="${product.image}" style="font-size: 2rem; color: #667eea;"></i></td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>${product.subcategory}</td>
+                    <td>${product.price} ريال</td>
+                    <td>${product.views}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="admin-btn btn-small" onclick="editProduct(${product.id})">تعديل</button>
+                            <button class="admin-btn btn-small danger" onclick="deleteProduct(${product.id})">حذف</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Search products
+        function searchProducts(searchTerm) {
+            const rows = document.querySelectorAll('#productsTableBody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('productSubcategory').innerHTML = '<option value="">اختر التصنيف الفرعي</option>';
+        }
+
+        // Show/hide loading
         function showLoading() {
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingOverlay').classList.add('show');
         }
 
         function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loadingOverlay').classList.remove('show');
         }
 
-        // Lightbox functions
-        function openLightbox(imageSrc) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImage = document.getElementById('lightboxImage');
-            lightboxImage.src = imageSrc;
-            lightbox.style.display = 'block';
+        // Show alert
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type} show`;
+            alert.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+                <button onclick="this.parentElement.remove()" style="float: left; background: none; border: none; font-size: 1.2rem;">&times;</button>
+            `;
+            container.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
         }
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
         }
 
-        // Close lightbox on outside click
-        document.getElementById('lightbox').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLightbox();
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Product management functions
+        function editProduct(id) {
+            const product = sampleProducts.find(p => p.id === id);
+            if (product) {
+                // Fill form with product data
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                updateSubcategories(product.category);
+                setTimeout(() => {
+                    document.getElementById('productSubcategory').value = product.subcategory;
+                }, 100);
+                document.getElementById('productPrice').value = product.price;
+                
+                showAlert('تم تحميل بيانات المنتج للتعديل', 'success');
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    showAlert('تم حذف المنتج بنجاح!', 'success');
+                    loadProducts();
+                }, 1000);
+            }
+        }
+
+        // Category management
+        function addCategory() {
+            const name = document.getElementById('categoryName').value;
+            const parent = document.getElementById('parentCategory').value;
+            
+            if (name) {
+                showAlert(`تم إضافة التصنيف "${name}" بنجاح!`, 'success');
+                document.getElementById('categoryName').value = '';
+                document.getElementById('parentCategory').value = '';
+            } else {
+                showAlert('يرجى إدخال اسم التصنيف', 'error');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                showAlert('تم تصدير البيانات بنجاح!', 'success');
+                // Here you would implement actual data export
+            }, 2000);
+        }
+
+        // Show notifications
+        function showNotifications() {
+            showAlert('لديك 3 إشعارات جديدة: طلب جديد، منتج بحاجة للمراجعة، تحديث النظام متاح', 'success');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Responsive sidebar
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+                if (sidebar.classList.contains('collapsed')) {
+                    main.classList.add('expanded');
+                } else {
+                    main.classList.remove('expanded');
+                }
+            } else {
+                sidebar.classList.remove('collapsed');
+                main.classList.remove('expanded');
             }
         });
     </script>
