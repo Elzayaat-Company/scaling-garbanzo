@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - شركة الزيات للإنتاج الداجني</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f7fa;
+            direction: rtl;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-sidebar.collapsed {
+            transform: translateX(240px);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 4px solid transparent;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: rgba(255,255,255,0.1);
+            border-right-color: #ffd700;
+            transform: translateX(-5px);
+        }
+
+        .menu-item i {
+            margin-left: 10px;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .admin-main {
+            margin-right: 280px;
+            min-height: 100vh;
+            transition: margin-right 0.3s ease;
+        }
+
+        .admin-main.expanded {
+            margin-right: 40px;
+        }
+
+        /* Header */
+        .admin-header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .admin-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .admin-btn.secondary {
+            background: #6c757d;
+        }
+
+        .admin-btn.success {
+            background: #28a745;
+        }
+
+        .admin-btn.danger {
+            background: #dc3545;
+        }
+
+        /* Content */
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.blue { background: #667eea; }
+        .stat-icon.green { background: #28a745; }
+        .stat-icon.orange { background: #fd7e14; }
+        .stat-icon.red { background: #dc3545; }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            background: #f0f2ff;
+            border-color: #5a67d8;
+        }
+
+        .file-upload.dragover {
+            background: #e6e9ff;
+            border-color: #4c51bf;
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .uploaded-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .uploaded-file {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .uploaded-file img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-remove {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(220,53,69,0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Table */
+        .data-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
+            background: #667eea;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .table-search {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            placeholder-color: rgba(255,255,255,0.7);
+        }
+
+        .table-search::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: #667eea;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Toggle Sidebar */
+        .sidebar-toggle {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            z-index: 1001;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 8px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #5a67d8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(280px);
+            }
+
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-right: 0;
+            }
+
+            .admin-header {
+                padding: 1rem;
+            }
+
+            .admin-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success/Error Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-seedling"></i> لوحة التحكم</h2>
+            <p>شركة الزيات للإنتاج الداجني</p>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('products')">
+                <i class="fas fa-pills"></i> إدارة المنتجات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('categories')">
+                <i class="fas fa-tags"></i> إدارة التصنيفات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('orders')">
+                <i class="fas fa-shopping-cart"></i> الطلبات
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('users')">
+                <i class="fas fa-users"></i> المستخدمين
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('reports')">
+                <i class="fas fa-chart-bar"></i> التقارير
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('settings')">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-external-link-alt"></i> عرض الموقع
+            </a>
+        </div>
+    </nav>
+
+    <!-- Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="admin-main" id="adminMain">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1 class="admin-title" id="pageTitle">لوحة التحكم الرئيسية</h1>
+            <div class="admin-actions">
+                <button class="admin-btn success" onclick="showModal('addProductModal')">
+                    <i class="fas fa-plus"></i> إضافة منتج
+                </button>
+                <button class="admin-btn secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i> تصدير البيانات
+                </button>
+                <button class="admin-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i> الإشعارات (3)
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <!-- Alerts -->
+            <div id="alertContainer"></div>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">127</div>
+                                <div class="stat-label">إجمالي المنتجات</div>
+                            </div>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">89</div>
+                                <div class="stat-label">طلبات اليوم</div>
+                            </div>
+                            <div class="stat-icon green">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">1,245</div>
+                                <div class="stat-label">إجمالي الزوار</div>
+                            </div>
+                            <div class="stat-icon orange">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-number">24,500</div>
+                                <div class="stat-label">المبيعات (ريال)</div>
+                            </div>
+                            <div class="stat-icon red">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">آخر الطلبات</h3>
+                        <input type="text" class="table-search" placeholder="بحث في الطلبات...">
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>العميل</th>
+                                <th>المنتج</th>
+                                <th>القيمة</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>أحمد محمد</td>
+                                <td>فيتا أمينو بلس</td>
+                                <td>120 ريال</td>
+                                <td><span style="color: #28a745;">مكتمل</span></td>
+                                <td>2024-01-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="admin-btn btn-small">عرض</button>
+                                        <button class="admin-btn btn-small success">تحديث</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#12344</td>
+                                <td>فاطمة علي</td>
+                                <td>كوكسي كيور</td>
+                                <td>85 ريال</td>
+                                <td><span style="color: #fd7e14;">معلق</span></td>
+                                <td>2024-01-14</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="admin-btn btn-small">عرض</button>
+                                        <button class="admin-btn btn-small success">تحديث</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section class="content-section" id="productsSection">
+                <div class="form-container">
+                    <h3>إضافة منتج جديد</h3>
+                    <form id="productForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">اسم المنتج</label>
+                                <input type="text" class="form-input" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">التصنيف الرئيسي</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">اختر التصنيف</option>
+                                    <option value="المنشطات">المنشطات</option>
+                                    <option value="الأدوية العلاجية">الأدوية العلاجية</option>
+                                    <option value="المضادات الحيوية">المضادات الحيوية</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">التصنيف الفرعي</label>
+                                <select class="form-select" id="productSubcategory" required>
+                                    <option value="">اختر التصنيف الفرعي</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">السعر</label>
+                                <input type="number" class="form-input" id="productPrice" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">وصف المنتج</label>
+                            <textarea class="form-textarea" id="productDescription" placeholder="اكتب وصفاً تفصيلياً للمنتج..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">صور المنتج</label>
+                            <div class="file-upload" onclick="document.getElementById('productImages').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>اسحب الصور هنا أو اضغط للاختيار</p>
+                                <small>PNG, JPG حتى 5MB لكل صورة</small>
+                                <input type="file" id="productImages" multiple accept="image/*">
+                            </div>
+                            <div class="uploaded-files" id="uploadedFiles"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="admin-btn success">
+                                <i class="fas fa-save"></i> حفظ المنتج
+                            </button>
+                            <button type="button" class="admin-btn secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i> إعادة تعيين
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">قائمة المنتجات</h3>
+                        <input type="text" class="table-search" placeholder="بحث في المنتجات..." onkeyup="searchProducts(this.value)">
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم المنتج</th>
+                                <th>التصنيف</th>
+                                <th>التصنيف الفرعي</th>
+                                <th>السعر</th>
+                                <th>المشاهدات</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="content-section" id="categoriesSection">
+                <div class="form-container">
+                    <h3>إدارة التصنيفات</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-input" id="categoryName" placeholder="مثال: المنشطات">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">التصنيف الرئيسي</label>
+                            <select class="form-select" id="parentCategory">
+                                <option value="">تصنيف رئيسي</option>
+                                <option value="المنشطات">المنشطات</option>
+                                <option value="الأدوية العلاجية">الأدوية العلاجية</option>
+                                <option value="المضادات الحيوية">المضادات الحيوية</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="admin-btn success" onclick="addCategory()">
+                        <i class="fas fa-plus"></i> إضافة التصنيف
+                    </button>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="content-section" id="ordersSection">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">إدارة الطلبات</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="form-select" style="width: auto;">
+                                <option>جميع الحالات</option>
+                                <option>معلق</option>
+                                <option>مؤكد</option>
+                                <option>مكتمل</option>
+                                <option>ملغي</option>
+                            </select>
+                            <input type="text" class="table-search" placeholder="بحث في الطلبات...">
+                        </div>
+                    </div>
+                    <!-- Orders table content -->
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section class="content-section" id="usersSection">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">إدارة المستخدمين</h3>
+                        <button class="admin-btn success" onclick="showModal('addUserModal')">
+                            <i class="fas fa-user-plus"></i> إضافة مستخدم
+                        </button>
+                    </div>
+                    <!-- Users table content -->
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section class="content-section" id="reportsSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>تقرير المبيعات الشهرية</h3>
+                        <canvas id="salesChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="stat-card">
+                        <h3>أكثر المنتجات مبيعاً</h3>
+                        <canvas id="productsChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settingsSection">
+                <div class="form-container">
+                    <h3>إعدادات الموقع</h3>
+                    <div class="form-group">
+                        <label class="form-label">اسم الشركة</label>
+                        <input type="text" class="form-input" value="شركة الزيات للإنتاج الداجني">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">وصف الشركة</label>
+                        <textarea class="form-textarea">نحن رواد في مجال توفير الأدوية البيطرية والأعلاف عالية الجودة</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-input" value="123-456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-input" value="info@alzayat.com">
+                        </div>
+                    </div>
+                    <button class="admin-btn success">
+                        <i class="fas fa-save"></i> حفظ الإعدادات
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة منتج جديد</h3>
+                <button class="modal-close" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Product form will be here -->
+                <p>نموذج إضافة المنتج...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const sampleProducts = [
+            {
+                id: 1,
+                name: "فيتا أمينو بلس",
+                category: "المنشطات",
+                subcategory: "فيتامينات عامة",
+                price: "120",
+                views: 245,
+                image: "fas fa-pills"
+            },
+            {
+                id: 2,
+                name: "كوكسي كيور",
+                category: "الأدوية العلاجية",
+                subcategory: "مضاد الكوكسيديا",
+                price: "85",
+                views: 189,
+                image: "fas fa-capsules"
+            },
+            {
+                id: 3,
+                name: "إنروفلوكس 10%",
+                category: "المضادات الحيوية",
+                subcategory: "إنروفلوكساسين",
+                price: "95",
+                views: 156,
+                image: "fas fa-syringe"
+            }
+        ];
+
+        // Subcategories mapping
+        const subcategories = {
+            "المنشطات": ["منشطات الكبد", "منشطات النمو", "سحب علف", "رافعات مناعة", "فيتامينات عامة", "خمائر", "تحصينات"],
+            "الأدوية العلاجية": ["مضاد الكوكسيديا", "مضاد الكولستريديا", "مضادات السموم", "الغسيل الكلوي", "موسعات الشعب"],
+            "المضادات الحيوية": ["لينكومايسين", "دوكسيكلين", "إنروفلوكساسين", "فوسفومايسين", "أمبيسلين", "تايلوزين", "تيلميكوزين", "إرثرومايسين", "نيومايسين", "أموكسيسلين"]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            setupEventListeners();
+        });
+
+        // Show/Hide sections
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName + 'Section').classList.add('active');
+
+            // Add active class to clicked menu item
+            event.target.classList.add('active');
+
+            // Update page title
+            const titles = {
+                'dashboard': 'لوحة التحكم الرئيسية',
+                'products': 'إدارة المنتجات',
+                'categories': 'إدارة التصنيفات',
+                'orders': 'إدارة الطلبات',
+                'users': 'إدارة المستخدمين',
+                'reports': 'التقارير والإحصائيات',
+                'settings': 'إعدادات النظام'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionName];
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('expanded');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Category change handler
+            document.getElementById('productCategory').addEventListener('change', function() {
+                updateSubcategories(this.value);
+            });
+
+            // File upload handler
+            document.getElementById('productImages').addEventListener('change', handleFileUpload);
+
+            // Form submit handler
+            document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
+
+            // Drag and drop
+            setupDragAndDrop();
+        }
+
+        // Update subcategories
+        function updateSubcategories(category) {
+            const subcategorySelect = document.getElementById('productSubcategory');
+            subcategorySelect.innerHTML = '<option value="">اختر التصنيف الفرعي</option>';
+
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            const container = document.getElementById('uploadedFiles');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const fileDiv = document.createElement('div');
+                        fileDiv.className = 'uploaded-file';
+                        fileDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button class="file-remove" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        container.appendChild(fileDiv);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Setup drag and drop
+        function setupDragAndDrop() {
+            const uploadArea = document.querySelector('.file-upload');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
+
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                document.getElementById('productImages').files = files;
+                handleFileUpload({target: {files: files}});
+            }
+        }
+
+        // Handle product form submit
+        function handleProductSubmit(event) {
+            event.preventDefault();
+            
+            showLoading();
+            
+            // Simulate API call
+            setTimeout(() => {
+                hideLoading();
+                showAlert('تم إضافة المنتج بنجاح!', 'success');
+                resetForm();
+                loadProducts();
+            }, 2000);
+        }
+
+        // Load products
+        function loadProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+
+            sampleProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><i class="${product.image}" style="font-size: 2rem; color: #667eea;"></i></td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>${product.subcategory}</td>
+                    <td>${product.price} ريال</td>
+                    <td>${product.views}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="admin-btn btn-small" onclick="editProduct(${product.id})">تعديل</button>
+                            <button class="admin-btn btn-small danger" onclick="deleteProduct(${product.id})">حذف</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Search products
+        function searchProducts(searchTerm) {
+            const rows = document.querySelectorAll('#productsTableBody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('productSubcategory').innerHTML = '<option value="">اختر التصنيف الفرعي</option>';
+        }
+
+        // Show/hide loading
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('show');
+        }
+
+        // Show alert
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type} show`;
+            alert.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+                <button onclick="this.parentElement.remove()" style="float: left; background: none; border: none; font-size: 1.2rem;">&times;</button>
+            `;
+            container.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Product management functions
+        function editProduct(id) {
+            const product = sampleProducts.find(p => p.id === id);
+            if (product) {
+                // Fill form with product data
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                updateSubcategories(product.category);
+                setTimeout(() => {
+                    document.getElementById('productSubcategory').value = product.subcategory;
+                }, 100);
+                document.getElementById('productPrice').value = product.price;
+                
+                showAlert('تم تحميل بيانات المنتج للتعديل', 'success');
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    showAlert('تم حذف المنتج بنجاح!', 'success');
+                    loadProducts();
+                }, 1000);
+            }
+        }
+
+        // Category management
+        function addCategory() {
+            const name = document.getElementById('categoryName').value;
+            const parent = document.getElementById('parentCategory').value;
+            
+            if (name) {
+                showAlert(`تم إضافة التصنيف "${name}" بنجاح!`, 'success');
+                document.getElementById('categoryName').value = '';
+                document.getElementById('parentCategory').value = '';
+            } else {
+                showAlert('يرجى إدخال اسم التصنيف', 'error');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                showAlert('تم تصدير البيانات بنجاح!', 'success');
+                // Here you would implement actual data export
+            }, 2000);
+        }
+
+        // Show notifications
+        function showNotifications() {
+            showAlert('لديك 3 إشعارات جديدة: طلب جديد، منتج بحاجة للمراجعة، تحديث النظام متاح', 'success');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Responsive sidebar
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+                if (sidebar.classList.contains('collapsed')) {
+                    main.classList.add('expanded');
+                } else {
+                    main.classList.remove('expanded');
+                }
+            } else {
+                sidebar.classList.remove('collapsed');
+                main.classList.remove('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
